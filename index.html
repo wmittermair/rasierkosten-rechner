@@ -5,67 +5,105 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rasierkosten-Rechner</title>
     <link rel="stylesheet" href="styles.css">
+    <!-- Material Icons hinzufügen -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
     <div class="container">
-        <h1>Rasierkosten-Rechner</h1>
+        <h1><span class="material-icons">calculate</span> Rasierkosten-Rechner</h1>
         
-        <div class="input-group">
-            <label for="rasurProWoche">Rasuren pro Woche:</label>
-            <div class="slider-container">
-                <input type="range" id="rasurProWocheSlider" min="1" max="7" value="3" class="slider">
+        <div class="input-card">
+            <div class="input-group">
+                <label for="rasurProWoche">
+                    <span class="material-icons">event</span>
+                    Rasuren pro Woche:
+                </label>
+                <div class="slider-container">
+                    <input type="range" id="rasurProWocheSlider" min="1" max="7" value="3" class="slider">
+                    <div class="number-control">
+                        <button class="button-control decrease" data-input="rasurProWoche">−</button>
+                        <input type="number" id="rasurProWocheInput" value="3" min="1" max="7">
+                        <button class="button-control increase" data-input="rasurProWoche">+</button>
+                    </div>
+                </div>
             </div>
-            <button class="button-control decrease" data-input="rasurProWoche">-</button>
-            <input type="number" id="rasurProWocheInput" value="3" min="1" max="7">
-            <button class="button-control increase" data-input="rasurProWoche">+</button>
+
+            <div class="input-group">
+                <label for="minutenProRasur">
+                    <span class="material-icons">timer</span>
+                    Minuten pro Rasur:
+                </label>
+                <div class="slider-container">
+                    <input type="range" id="minutenProRasurSlider" min="1" max="30" value="5" class="slider">
+                    <div class="number-control">
+                        <button class="button-control decrease" data-input="minutenProRasur">−</button>
+                        <input type="number" id="minutenProRasurInput" value="5" min="1" max="30">
+                        <button class="button-control increase" data-input="minutenProRasur">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="klingenHaltbarkeit">
+                    <span class="material-icons">today</span>
+                    Klingenhaltbarkeit in Tagen:
+                </label>
+                <div class="slider-container">
+                    <input type="range" id="klingenHaltbarkeitSlider" min="1" max="30" value="7" class="slider">
+                    <div class="number-control">
+                        <button class="button-control decrease" data-input="klingenHaltbarkeit">−</button>
+                        <input type="number" id="klingenHaltbarkeitInput" value="7" min="1" max="30">
+                        <button class="button-control increase" data-input="klingenHaltbarkeit">+</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="input-group">
-            <label for="minutenProRasur">Minuten pro Rasur:</label>
-            <div class="slider-container">
-                <input type="range" id="minutenProRasurSlider" min="1" max="30" value="5" class="slider">
-            </div>
-            <button class="button-control decrease" data-input="minutenProRasur">-</button>
-            <input type="number" id="minutenProRasurInput" value="5" min="1" max="30">
-            <button class="button-control increase" data-input="minutenProRasur">+</button>
+        <!-- Toggle Switch -->
+        <div class="toggle-container">
+            <span class="toggle-label" data-timeframe="monthly">pro Monat</span>
+            <label class="switch">
+                <input type="checkbox" id="timeframeToggle">
+                <span class="slider round"></span>
+            </label>
+            <span class="toggle-label" data-timeframe="yearly">pro Jahr</span>
         </div>
 
-        <div class="input-group">
-            <label for="klingenHaltbarkeit">Klingenhaltbarkeit in Tagen:</label>
-            <div class="slider-container">
-                <input type="range" id="klingenHaltbarkeitSlider" min="1" max="30" value="7" class="slider">
-            </div>
-            <button class="button-control decrease" data-input="klingenHaltbarkeit">-</button>
-            <input type="number" id="klingenHaltbarkeitInput" value="7" min="1" max="30">
-            <button class="button-control increase" data-input="klingenHaltbarkeit">+</button>
-        </div>
-
-        <div class="results">
+        <!-- Ergebnisse Container -->
+        <div id="monthlyResults" class="results">
             <div class="result-box">
-                <h3>Zeit pro Monat:</h3>
+                <h3>Zeitaufwand:</h3>
                 <p id="zeitProMonat">0 Minuten</p>
             </div>
             <div class="result-box">
-                <h3>Klingenkosten pro Monat:</h3>
+                <h3>Klingenkosten:</h3>
                 <p id="kostenProMonat">0 €</p>
             </div>
             <div class="result-box">
-                <h3>Rasierschaumkosten pro Monat:</h3>
+                <h3>Rasierschaumkosten:</h3>
                 <p id="schaumKostenProMonat">0 €</p>
+            </div>
+            <div class="result-box">
+                <h3>Gesamtkosten:</h3>
+                <p id="gesamtKostenProMonat">0 €</p>
             </div>
         </div>
 
-        <div class="results">
+        <div id="yearlyResults" class="results hidden">
             <div class="result-box">
-                <h3>Zeit pro Jahr:</h3>
+                <h3>Zeitaufwand:</h3>
                 <p id="zeitProJahr">0 Stunden</p>
             </div>
             <div class="result-box">
-                <h3>Gesamtkosten pro Monat:</h3>
-                <p id="gesamtKostenProMonat">0 €</p>
+                <h3>Klingenkosten:</h3>
+                <p id="kostenProJahr">0 €</p>
             </div>
             <div class="result-box">
-                <h3>Gesamtkosten pro Jahr:</h3>
+                <h3>Rasierschaumkosten:</h3>
+                <p id="schaumKostenProJahr">0 €</p>
+            </div>
+            <div class="result-box">
+                <h3>Gesamtkosten:</h3>
                 <p id="gesamtKostenProJahr">0 €</p>
             </div>
         </div>

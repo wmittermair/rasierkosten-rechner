@@ -6,6 +6,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const minutenProRasurInput = document.getElementById('minutenProRasurInput');
     const klingenHaltbarkeitSlider = document.getElementById('klingenHaltbarkeitSlider');
     const klingenHaltbarkeitInput = document.getElementById('klingenHaltbarkeitInput');
+    const timeframeToggle = document.getElementById('timeframeToggle');
+    const monthlyResults = document.getElementById('monthlyResults');
+    const yearlyResults = document.getElementById('yearlyResults');
+
+    const monthlyLabel = document.querySelector('.toggle-label[data-timeframe="monthly"]');
+    const yearlyLabel = document.querySelector('.toggle-label[data-timeframe="yearly"]');
+
+    // Initial state
+    monthlyLabel.classList.add('active');
 
     // Event Listener für Synchronisation zwischen Slider und Textfeld
     function syncInputs(slider, input) {
@@ -98,6 +107,44 @@ document.addEventListener('DOMContentLoaded', function() {
         }, { passive: false }); // passive: false erlaubt preventDefault()
     });
 
+    // Funktion zum Aktualisieren der Labels
+    function updateLabels(isYearly) {
+        if (isYearly) {
+            yearlyLabel.classList.add('active');
+            monthlyLabel.classList.remove('active');
+        } else {
+            monthlyLabel.classList.add('active');
+            yearlyLabel.classList.remove('active');
+        }
+    }
+
+    // Event Listener für Labels
+    monthlyLabel.addEventListener('click', function() {
+        timeframeToggle.checked = false;
+        updateLabels(false);
+        monthlyResults.classList.remove('hidden');
+        yearlyResults.classList.add('hidden');
+    });
+
+    yearlyLabel.addEventListener('click', function() {
+        timeframeToggle.checked = true;
+        updateLabels(true);
+        monthlyResults.classList.add('hidden');
+        yearlyResults.classList.remove('hidden');
+    });
+
+    // Update den bestehenden Toggle Event Listener
+    timeframeToggle.addEventListener('change', function() {
+        updateLabels(this.checked);
+        if (this.checked) {
+            monthlyResults.classList.add('hidden');
+            yearlyResults.classList.remove('hidden');
+        } else {
+            monthlyResults.classList.remove('hidden');
+            yearlyResults.classList.add('hidden');
+        }
+    });
+
     function berechneErgebnisse(isSliding = false, activeElements = new Set()) {
         // Werte aus den Eingabefeldern holen
         const rasurProWoche = parseInt(rasurProWocheInput.value);
@@ -122,6 +169,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const gesamtKostenProMonat = kostenProMonat + schaumKostenProMonat;
         const gesamtKostenProJahr = gesamtKostenProMonat * 12;
 
+        const klingenKostenProJahr = kostenProMonat * 12;
+        const schaumKostenProJahr = schaumKostenProMonat * 12;
+
         // Funktion zum Aktualisieren eines Elements mit Highlight-Effekt
         function updateWithHighlight(elementId, newValue) {
             const element = document.getElementById(elementId);
@@ -144,11 +194,16 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Ergebnisse anzeigen mit Highlight-Effekt
+        // Monatliche Werte
         updateWithHighlight('zeitProMonat', Math.round(zeitProMonat) + ' Minuten');
         updateWithHighlight('kostenProMonat', kostenProMonat.toFixed(2) + ' €');
         updateWithHighlight('schaumKostenProMonat', schaumKostenProMonat.toFixed(2) + ' €');
-        updateWithHighlight('zeitProJahr', Math.round(zeitProJahr / 60) + ' Stunden');
         updateWithHighlight('gesamtKostenProMonat', gesamtKostenProMonat.toFixed(2) + ' €');
+        
+        // Jährliche Werte
+        updateWithHighlight('zeitProJahr', Math.round(zeitProJahr / 60) + ' Stunden');
+        updateWithHighlight('kostenProJahr', klingenKostenProJahr.toFixed(2) + ' €');
+        updateWithHighlight('schaumKostenProJahr', schaumKostenProJahr.toFixed(2) + ' €');
         updateWithHighlight('gesamtKostenProJahr', gesamtKostenProJahr.toFixed(2) + ' €');
     }
 
